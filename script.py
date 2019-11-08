@@ -2,6 +2,7 @@
 
 import requests
 import sys
+import json
 
 if len(sys.argv) != 6:
     print('''Incorrect number of argument.
@@ -14,26 +15,41 @@ jenkins_url = sys.argv[3]
 job_name = sys.argv[4]
 hook_url = sys.argv[5]
 
+
 def auth_get(url):
     r = requests.get(url, auth=requests.auth.HTTPBasicAuth(user, password))
     return r
 
 
 def post_on_slack(message):
-    data = '{"text":"%s"}' % message
-    print(data)
-    r = requests.post(hook_url, data=data)
+    tests_url = 'http://' + jenkins_url + 'job/' + job_name
+    data = dict()
+    data['text'] = message
+    data['attachments'] = [{
+            'fallback': 'See on jenkins :jenkins: ' + tests_url,
+            'actions': [
+                {
+                    'type': 'button',
+                    'text': 'See on jenkins :jenkins:',
+                    'url': tests_url
+                }
+            ]
+        }]
+    data_string = json.dumps(data)
+    print(data_string)
+    r = requests.post(hook_url, data=data_string)
     return r
 
 
 def message_formatter(tests_number, fails_number, primary_fails_number):
     message = job_name + '\n'
     if fails_number == 0:
-        message = message + 'All %s tests are green :ok-hand:' % (tests_number)
+        message = message + ':green_heart: All %s tests are green' % (tests_number)
     else:
         tests_string = "tests" if fails_number > 1 else "test"
+        verb_string = "are" if fails_number > 1 else "is"
         primaries_string = "primaries" if primary_fails_number > 1 else "primary"
-        message = message + ':red_circle: %s %s are failing (%s %s)' % (fails_number, tests_string, primary_fails_number, primaries_string)
+        message = message + ':red_circle: %s %s %s failing (%s %s)' % (fails_number, tests_string, verb_string, primary_fails_number, primaries_string)
     return message
 
 
