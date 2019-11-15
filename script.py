@@ -21,19 +21,15 @@ def auth_get(url):
     return r
 
 
-def post_on_slack(message):
-    tests_url = 'http://' + jenkins_url + 'job/' + job_name
+def post_on_slack(message, color):
+    tests_url = jenkins_url + 'job/' + job_name
     data = dict()
-    data['text'] = message
     data['attachments'] = [{
-            'fallback': 'See on jenkins :jenkins: ' + tests_url,
-            'actions': [
-                {
-                    'type': 'button',
-                    'text': 'See on jenkins :jenkins:',
-                    'url': tests_url
-                }
-            ]
+            "fallback": message,
+            "color": color,
+            "title": job_name,
+            "title_link": tests_url,
+            "text": message
         }]
     data_string = json.dumps(data)
     print(data_string)
@@ -42,22 +38,24 @@ def post_on_slack(message):
 
 
 def message_formatter(tests_number, fails_number, primary_fails_number):
-    message = job_name + '\n'
+    message = ''
     if fails_number == 0:
-        message = message + ':green_heart: All %s tests are green' % (tests_number)
+        message = message + '%s tests passed' % (tests_number)
     else:
-        tests_string = "tests" if fails_number > 1 else "test"
-        verb_string = "are" if fails_number > 1 else "is"
-        primaries_string = "primaries" if primary_fails_number > 1 else "primary"
-        message = message + ':red_circle: %s %s %s failing (%s %s)' % (fails_number, tests_string, verb_string, primary_fails_number, primaries_string)
+        tests_string = "test" if fails_number == 1 else "tests"
+        primaries_string = "primary" if primary_fails_number == 1 else "primaries"
+        message = message + '%s %s failed (%s %s)' % (fails_number, tests_string, primary_fails_number, primaries_string)
     return message
 
 
-try:
-    # crumb_url = jenkins_url + 'crumbIssuer/api/json'
-    # crumb_response = get(crumb_url)
-    # print(f'crumb response: {crumb_response.status_code}')
+def get_color(fails_number):
+    if fails_number == 0:
+        return '#36a64f'
+    else:
+        return '#FC736A'
 
+
+try:
     # get the list of tests
     project_url = jenkins_url + 'job/' + job_name + '/lastBuild/api/json'
     project_response = auth_get(project_url)
@@ -81,11 +79,13 @@ try:
     print('primary_fails_number: %s' % primary_fails_number)
 
     # send summary on slack
-    message = message_formatter(tests_number, fails_number, primary_fails_number)
-    post_on_slack(message)
+    message = message_formatter(
+        tests_number, fails_number, primary_fails_number)
+    color = get_color(fails_number)
+    post_on_slack(message, color)
     sys.exit(0)
 
 except requests.exceptions.HTTPError as http_err:
     print('HTTP error occurred: %s' % http_err)
 except Exception as err:
-    print('Other error occurred: %s' % err)
+    print('Unexpected error occurred: %s' % err)
