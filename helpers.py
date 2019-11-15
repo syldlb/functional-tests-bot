@@ -2,8 +2,9 @@ import requests
 import json
 
 
-def message_formatter(tests_number, fails_number, primary_fails_number):
-    message = ''
+def message_formatter(tests_number,
+                      fails_number, primary_fails_number, browser):
+    message = browser + ': '
     if fails_number == 0:
         message = message + '%s tests passed' % (tests_number)
         return message
