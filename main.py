@@ -45,7 +45,7 @@ try:
     # send summary on slack
     message = message_formatter(
         tests_number, fails_number, primary_fails_number, browser)
-    color = get_color(fails_number)
+    color = get_color(fails_number, primary_fails_number)
     post_on_slack(jenkins_url, hook_url, job_name, message, color)
     sys.exit(0)
 

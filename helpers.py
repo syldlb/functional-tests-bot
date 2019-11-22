@@ -16,9 +16,11 @@ def message_formatter(tests_number,
     return message
 
 
-def get_color(fails_number):
+def get_color(fails_number, primary_fails_number):
     if fails_number == 0:
         return '#36a64f'
+    elif primary_fails_number == 0:
+        return '#FFBF00'
     else:
         return '#FC736A'
 

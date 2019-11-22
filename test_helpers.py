@@ -1,13 +1,23 @@
-from helpers import get_color, message_formatter, post_on_slack
+from helpers import get_color, message_formatter
 
 
 def test_get_color_zero_fails():
-    color = get_color(0)
+    color = get_color(0, 0)
     assert color == '#36a64f'
 
 
-def test_get_color_one_fail():
-    color = get_color(1)
+def test_get_color_one_secondary_fail():
+    color = get_color(1, 0)
+    assert color == '#FFBF00'
+
+
+def test_get_color_one_primary_fail():
+    color = get_color(1, 1)
+    assert color == '#FC736A'
+
+
+def test_get_color_two_fails():
+    color = get_color(2, 1)
     assert color == '#FC736A'
 
 
