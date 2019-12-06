@@ -5,10 +5,10 @@ import sys
 
 from helpers import auth_get, message_formatter, get_color, post_on_slack
 
-if len(sys.argv) != 7:
+if len(sys.argv) != 8:
     print('Incorrect number of argument.\n'
-          'Usage python3.5 script.py [username] [password] [jenkins_url] '
-          '[job_name] [hook_utl] [browser]')
+          'Usage python3.5 main.py [username] [password] [jenkins_url] '
+          '[job_name] [hook_url] [browser] [use_primaries]')
     sys.exit(1)
 
 user = sys.argv[1]
@@ -17,6 +17,7 @@ jenkins_url = sys.argv[3]
 job_name = sys.argv[4]
 hook_url = sys.argv[5]
 browser = sys.argv[6]
+use_primaries = sys.argv[7]
 
 
 try:
@@ -44,8 +45,10 @@ try:
 
     # send summary on slack
     message = message_formatter(
-        tests_number, fails_number, primary_fails_number, browser)
-    color = get_color(fails_number, primary_fails_number)
+        tests_number, fails_number, primary_fails_number, browser,
+        use_primaries
+    )
+    color = get_color(fails_number, primary_fails_number, use_primaries)
     post_on_slack(jenkins_url, hook_url, job_name, message, color)
     sys.exit(0)
 
