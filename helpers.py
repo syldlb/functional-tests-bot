@@ -1,5 +1,19 @@
 import requests
 import json
+import random
+
+
+def get_random_gif_url(category):
+    random_index = random.randint(0, 24)
+    params = {
+        'api_key': 'sBCHvYtz8j1KDBeCJKhZLGq7oO6llfC6',
+        'q': category
+    }
+    url = 'https://api.giphy.com/v1/gifs/search'
+    r = requests.get(url, params)
+    gifs_json = r.json()
+    gif_url = gifs_json['data'][random_index]['images']['preview_gif']['url']
+    return gif_url
 
 
 def message_formatter(
@@ -33,7 +47,7 @@ def auth_get(url, user, password):
     return r
 
 
-def post_on_slack(jenkins_url, hook_url, job_name, message, color):
+def post_on_slack(jenkins_url, hook_url, job_name, message, color, gif_url):
     tests_url = jenkins_url + 'job/' + job_name
     data = dict()
     data['attachments'] = [{
@@ -43,6 +57,8 @@ def post_on_slack(jenkins_url, hook_url, job_name, message, color):
             "title_link": tests_url,
             "text": message
         }]
+    if gif_url:
+        data['attachments'][0]['image_url'] = gif_url
     data_string = json.dumps(data)
     print(data_string)
     requests.post(hook_url, data=data_string)

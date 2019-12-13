@@ -3,12 +3,13 @@
 import requests
 import sys
 
-from helpers import auth_get, message_formatter, get_color, post_on_slack
+from helpers import (auth_get, message_formatter, get_color, post_on_slack,
+                     get_random_gif_url)
 
-if len(sys.argv) != 8:
+if len(sys.argv) != 9:
     print('Incorrect number of argument.\n'
           'Usage python3.5 main.py [username] [password] [jenkins_url] '
-          '[job_name] [hook_url] [browser] [use_primaries]')
+          '[job_name] [hook_url] [browser] [use_primaries] [gif_category]')
     sys.exit(1)
 
 user = sys.argv[1]
@@ -18,6 +19,7 @@ job_name = sys.argv[4]
 hook_url = sys.argv[5]
 browser = sys.argv[6]
 use_primaries = sys.argv[7]
+gif_category = sys.argv[8]
 
 
 try:
@@ -44,12 +46,16 @@ try:
     print('primary_fails_number: %s' % primary_fails_number)
 
     # send summary on slack
+    if fails_number == 0 and gif_category != 'no_gif':
+        gif_url = get_random_gif_url(gif_category)
+    else:
+        gif_url = None
     message = message_formatter(
         tests_number, fails_number, primary_fails_number, browser,
         use_primaries
     )
     color = get_color(fails_number, primary_fails_number, use_primaries)
-    post_on_slack(jenkins_url, hook_url, job_name, message, color)
+    post_on_slack(jenkins_url, hook_url, job_name, message, color, gif_url)
     sys.exit(0)
 
 except requests.exceptions.HTTPError as http_err:
