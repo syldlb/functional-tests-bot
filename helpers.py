@@ -18,14 +18,14 @@ def message_formatter(
 ):
     message = browser + ": "
     if fails_number == 0:
-        message = message + "%s tests passed" % (tests_number)
+        message = f"{message}{tests_number} tests passed"
         return message
 
     tests_string = "test" if fails_number == 1 else "tests"
-    message = message + "%s %s failed" % (fails_number, tests_string)
+    message = f"{message}{fails_number} {tests_string} failed"
     if use_primaries == "true":
         primary_str = "primary" if primary_fails_number == 1 else "primaries"
-        message = message + " (%s %s)" % (primary_fails_number, primary_str)
+        message = f"{message} ({primary_fails_number} {primary_str})"
     return message
 
 
@@ -44,7 +44,7 @@ def auth_get(url, user, password):
 
 
 def post_on_slack(jenkins_url, hook_url, job_name, message, color, gif_url):
-    tests_url = jenkins_url + "job/" + job_name
+    tests_url = f"{jenkins_url}job/{job_name}"
     data = dict()
     data["attachments"] = [
         {

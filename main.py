@@ -11,7 +11,7 @@ from helpers import (
     get_random_gif_url,
 )
 
-if len(sys.argv) != 9:
+if len(sys.argv) != 10:
     print(
         "Incorrect number of argument.\n"
         "Usage python3.6 main.py [username] [password] [giphy_key] "
@@ -33,7 +33,7 @@ gif_category = sys.argv[9]
 
 try:
     # get the list of tests
-    project_url = jenkins_url + "job/" + job_name + "/lastBuild/api/json"
+    project_url = f"{jenkins_url}job/{job_name}/lastBuild/api/json"
     project_response = auth_get(project_url, user, password)
     print("response code: %s" % project_response.status_code)
 
