@@ -1,10 +1,4 @@
-from helpers import get_color, message_formatter, get_random_gif_url
-
-
-def test_get_random_gif_url():
-    url = get_random_gif_url("owl")
-    assert ".gif" in url
-    assert "giphy.com" in url
+from helpers import get_color, message_formatter
 
 
 def test_get_color_zero_fails():
