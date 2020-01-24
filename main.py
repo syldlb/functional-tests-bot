@@ -14,19 +14,21 @@ from helpers import (
 if len(sys.argv) != 9:
     print(
         "Incorrect number of argument.\n"
-        "Usage python3.5 main.py [username] [password] [jenkins_url] "
-        "[job_name] [hook_url] [browser] [use_primaries] [gif_category]"
+        "Usage python3.6 main.py [username] [password] [giphy_key] "
+        "[jenkins_url] [job_name] [hook_url] [browser] [use_primaries] "
+        "[gif_category]"
     )
     sys.exit(1)
 
 user = sys.argv[1]
 password = sys.argv[2]
-jenkins_url = sys.argv[3]
-job_name = sys.argv[4]
-hook_url = sys.argv[5]
-browser = sys.argv[6]
-use_primaries = sys.argv[7]
-gif_category = sys.argv[8]
+giphy_key = sys.argv[3]
+jenkins_url = sys.argv[4]
+job_name = sys.argv[5]
+hook_url = sys.argv[6]
+browser = sys.argv[7]
+use_primaries = sys.argv[8]
+gif_category = sys.argv[9]
 
 
 try:
@@ -54,7 +56,7 @@ try:
 
     # send summary on slack
     if fails_number == 0 and gif_category != "no_gif":
-        gif_url = get_random_gif_url(gif_category)
+        gif_url = get_random_gif_url(gif_category, giphy_key)
     else:
         gif_url = None
     message = message_formatter(
