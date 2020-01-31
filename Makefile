@@ -1,6 +1,6 @@
 .PHONY: pytest
 pytest:
-	pytest
+	pytest --cov=bot
 
 .PHONY: black
 black:
@@ -16,3 +16,7 @@ flake8:
 
 .PHONY: tests
 tests: pytest black-check flake8
+
+.PHONE: coverage
+coverage:
+	coverage run --source main.py helpers.py -m pytest
