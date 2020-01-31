@@ -1,6 +1,6 @@
 .PHONY: pytest
 pytest:
-	pytest --cov=helpers
+	pytest --cov=bot
 
 .PHONY: black
 black:
