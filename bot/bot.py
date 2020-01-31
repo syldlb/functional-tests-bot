@@ -4,7 +4,7 @@ import sys
 from bot.helpers import (
     message_formatter,
     get_color,
-    check_args,
+    validate_args,
 )
 from bot.jenkins import get_tests_list, get_run_detail_response
 from bot.giphy import get_random_gif_url
@@ -13,7 +13,8 @@ from bot.slack import post_on_slack
 
 def run(args):
 
-    check_args(args)
+    if not validate_args(args):
+        sys.exit(1)
 
     user = args[1]
     password = args[2]

@@ -4,7 +4,7 @@ from bot.helpers import auth_get
 def get_tests_list(jenkins_url, job_name, user, password):
     project_url = f"{jenkins_url}job/{job_name}/lastBuild/api/json"
     project_response = auth_get(project_url, user, password)
-    print("response code: %s" % project_response.status_code)
+    print(f"response code: {project_response.status_code}")
     return project_response
 
 

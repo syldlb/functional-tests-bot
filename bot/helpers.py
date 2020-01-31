@@ -1,8 +1,7 @@
 import requests
-import sys
 
 
-def check_args(args):
+def validate_args(args):
     if len(args) != 10:
         print(
             "Incorrect number of argument.\n"
@@ -10,7 +9,8 @@ def check_args(args):
             "[jenkins_url] [job_name] [hook_url] [browser] [use_primaries] "
             "[gif_category]"
         )
-        sys.exit(1)
+        return False
+    return True
 
 
 def message_formatter(
