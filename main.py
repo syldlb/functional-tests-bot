@@ -3,7 +3,7 @@
 import requests
 import sys
 
-from helpers import (
+from helpers.helpers import (
     auth_get,
     message_formatter,
     get_color,

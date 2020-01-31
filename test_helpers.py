@@ -1,4 +1,4 @@
-from helpers import get_color, message_formatter
+from helpers.helpers import get_color, message_formatter
 
 
 def test_get_color_zero_fails():
