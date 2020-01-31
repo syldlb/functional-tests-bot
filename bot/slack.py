@@ -18,4 +18,4 @@ def post_on_slack(jenkins_url, hook_url, job_name, message, color, gif_url):
         data["attachments"][0]["image_url"] = gif_url
     data_string = json.dumps(data)
     print(data_string)
-    requests.post(hook_url, data=data_string)
+    return requests.post(hook_url, data=data_string)
